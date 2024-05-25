@@ -27,7 +27,7 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
 
     if wiki_page is None:
         wiki_page="Roy Lichtenstein"
-        ###return func.HttpResponse(f"Could not find Wikipage for {wiki_page}. Add query param at end of url like &wiki=Roy Lichtenstein", mimetype="text/json")    
+        ####return func.HttpResponse(f"Could not find Wikipage for {wiki_page}. Add query param at end of url like &wiki=Roy Lichtenstein", mimetype="text/json")    
 
     q=manage_quiz_gen.Generate_Quiz()
     
