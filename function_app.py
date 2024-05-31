@@ -14,7 +14,7 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
     
     wiki_page = azservicebus.get_body().decode('utf-8')
 
-    logging.info('Python ServiceBus Queue trigger processed a message: %s',wiki_page)
+    logging.info('Python ServiceBus Queue trigger processed a message:',wiki_page)
     print('Python ServiceBus Queue trigger processed a message: %s',wiki_page)
     
     try:
@@ -34,7 +34,9 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
             wiki_page="Roy Lichtenstein"
 
         #create blob
+        logging.info("**Before helper function")
         helpF = manage_quiz_gen.HelperFunctions()
+        logging.info("**Before blob_client creation function")
         blob_client = helpF.BlobCreationManager()
 
         q=manage_quiz_gen.Generate_Quiz()

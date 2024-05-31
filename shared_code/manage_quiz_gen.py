@@ -183,6 +183,7 @@ class HelperFunctions:
         self.container_client=None
 
     def BlobCreationManager(self):
+        logging.info("**At top BlobCreationManager")
         self.GetVariableValues
         self.CreateBlobServiceClient
         self.CreateContainerClient
@@ -194,23 +195,27 @@ class HelperFunctions:
         self.storage_connection_string=os.environ["AzureWebJobsStorage"]
         self.blob_container_name=os.environ["BLOB_CONTAINER_NAME"]
         self.blob_name=os.environ["BLOB_NAME"]
+        logging.info("**After create all variables")
+
 
     def CreateBlobServiceClient(self):
         #Create blob service client
         self.blob_service_client = BlobServiceClient.from_connection_string(self.storage_connection_string)
+        logging.info("**After create blob service client")
 
     def CreateContainerClient(self):
         #Create/Get blob container
         self.container_client = self.blob_service_client.get_container_client(self.blob_container_name)
         if not self.container_client.exists():
             self.container_client.create_container()
+        logging.info("**After create container",self.blob_container_name)
 
     def CreateBlobClient(self):
         # Create or get the blob client
         self.blob_client = self.container_client.get_blob_client(self.blob_name)
         if not self.blob_client.exists():
             self.blob_client.upload_blob("")
-            logging.info("Created blob")
+            logging.info("**Created blob")
         else:
             self.blob_client.upload_blob("", overwrite=True)
-            logging.info("Blob Exists, Delete All.")
+            logging.info("**Blob Exists, Delete All.")
