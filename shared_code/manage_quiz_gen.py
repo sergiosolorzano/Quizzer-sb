@@ -62,12 +62,13 @@ class Generate_Quiz:
         with open(json_example_filename, 'r') as file:
                 self.json_example = file.read()
 
-        kvname=os.environ["KEY_VAULT_NAME"]
-        openaikey_name=os.environ["OPENAI_KEY_SECRET_NAME"]
-        KVUri = f"https://{kvname}.vault.azure.net"
-        credential = DefaultAzureCredential()
-        client = SecretClient(vault_url=KVUri, credential=credential)
-        self.openai_k = client.get_secret(openaikey_name).value
+        # kvname=os.environ["KEY_VAULT_NAME"]
+        # openaikey_name=os.environ["OPENAI_KEY_SECRET_NAME"]
+        # KVUri = f"https://{kvname}.vault.azure.net"
+        self.openai_k="b854962a30664937a4258156e344347c"
+        # credential = DefaultAzureCredential()
+        # client = SecretClient(vault_url=KVUri, credential=credential)
+        # self.openai_k = client.get_secret(openaikey_name).value
 
         with open(quiz_examples_filename, 'r') as file:
                 self.quiz_examples = file.read()
