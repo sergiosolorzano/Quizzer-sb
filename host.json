@@ -10,7 +10,6 @@
             "maxRetries": 1
         },
         "prefetchCount": 0,
-        "webProxy": "https://proxyserver:8080",
         "autoCompleteMessages": true,
         "maxAutoLockRenewalDuration": "00:02:30",
         "maxConcurrentCalls": 1,
