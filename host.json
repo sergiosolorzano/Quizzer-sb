@@ -10,7 +10,6 @@
             "maxRetries": 0
         },
         "prefetchCount": 0,
-        "transportType": "amqpWebSockets",
         "webProxy": "https://proxyserver:8080",
         "autoCompleteMessages": true,
         "maxAutoLockRenewalDuration": "00:02:30",
