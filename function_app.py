@@ -14,7 +14,7 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
     
     wiki_page = azservicebus.get_body().decode('utf-8')
 
-    logging.info('Python ServiceBus Queue trigger processed a message:' + wiki_page)
+    logging.info('Python ServiceBus Queue trigger processed a message:%s', wiki_page)
     print('Python ServiceBus Queue trigger processed a message: ', wiki_page)
     
     try:

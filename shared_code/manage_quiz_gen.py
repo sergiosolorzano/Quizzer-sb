@@ -66,7 +66,7 @@ class Generate_Quiz:
         # kvname=os.environ["KEY_VAULT_NAME"]
         # openaikey_name=os.environ["OPENAI_KEY_SECRET_NAME"]
         # KVUri = f"https://{kvname}.vault.azure.net"
-        self.openai_k="b854962a30664937a4258156e344347c"
+        self.openai_k="d06f21924c954d0ab63168244ddfde60"
         # credential = DefaultAzureCredential()
         # client = SecretClient(vault_url=KVUri, credential=credential)
         # self.openai_k = client.get_secret(openaikey_name).value
@@ -176,47 +176,43 @@ class Generate_Quiz:
     
 class HelperFunctions:
     def __init__(self):
-        self.storage_connection_string=None
-        self.blob_container_name=None
-        self.blob_name=None
-        self.blob_service_client=None
-        self.container_client=None
+        self.storage_connection_string = None
+        self.blob_container_name = None
+        self.blob_name = None
+        self.blob_service_client = None
+        self.container_client = None
         self.blob_client = None
 
     def BlobCreationManager(self):
         logging.info("**At top BlobCreationManager")
-        self.GetVariableValues
-        self.CreateBlobServiceClient
-        self.CreateContainerClient
-        self.CreateBlobClient
-
-        return self.blob_client
+        self.GetVariableValues()
+        self.CreateBlobServiceClient()
+        self.CreateContainerClient()
+        return self.CreateBlobClient()
 
     def GetVariableValues(self):
-        self.storage_connection_string=os.environ["AzureWebJobsStorage"]
-        self.blob_container_name=os.environ["BLOB_CONTAINER_NAME"]
-        self.blob_name=os.environ["BLOB_NAME"]
-        logging.info("**After create all variables")
-
+        self.storage_connection_string = os.environ["AzureWebJobsStorage"]
+        self.blob_container_name = os.environ["BLOB_CONTAINER_NAME"]
+        self.blob_name = os.environ["BLOB_NAME"]
+        logging.info("**After creating all variables")
 
     def CreateBlobServiceClient(self):
-        #Create blob service client
         self.blob_service_client = BlobServiceClient.from_connection_string(self.storage_connection_string)
-        logging.info("**After create blob service client")
+        logging.info("**After creating blob service client")
 
     def CreateContainerClient(self):
-        #Create/Get blob container
         self.container_client = self.blob_service_client.get_container_client(self.blob_container_name)
         if not self.container_client.exists():
             self.container_client.create_container()
-        logging.info("**After create container " + self.blob_container_name)
+        logging.info("**After creating container %s", self.blob_container_name)
 
     def CreateBlobClient(self):
-        # Create or get the blob client
         self.blob_client = self.container_client.get_blob_client(self.blob_name)
         if not self.blob_client.exists():
             self.blob_client.upload_blob("")
             logging.info("**Created blob")
         else:
             self.blob_client.upload_blob("", overwrite=True)
-            logging.info("**Blob Exists, Delete All.")
+            logging.info("**Blob exists, overwriting")
+
+        return self.blob_client
