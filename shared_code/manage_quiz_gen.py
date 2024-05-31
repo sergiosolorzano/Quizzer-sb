@@ -209,10 +209,10 @@ class HelperFunctions:
     def CreateBlobClient(self):
         self.blob_client = self.container_client.get_blob_client(self.blob_name)
         if not self.blob_client.exists():
-            self.blob_client.upload_blob("Initial Creation.")
+            self.blob_client.upload_blob("")
             logging.info("**Created blob")
         else:
-            self.blob_client.upload_blob("Initial Creation", overwrite=True)
+            self.blob_client.upload_blob("", overwrite=True)
             logging.info("**Blob exists, overwriting")
 
         return self.blob_client
@@ -225,3 +225,10 @@ class HelperFunctions:
         except Exception as e:
             logging.error("**Failed to read data from blob: %s", str(e))
             return None
+        
+    def AppendDataToBlob(self, data):
+        try:
+            self.blob_client.append_blob_from_bytes(data)
+            logging.info("**Data appended to blob: %s", self.blob_name)
+        except Exception as e:
+            logging.error("**Failed to append data to blob: %s", str(e))
