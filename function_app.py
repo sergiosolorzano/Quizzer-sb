@@ -39,11 +39,15 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
 
         q=manage_quiz_gen.Generate_Quiz()
         
-        #response = await asyncio.to_thread(q.quiz_manager, wiki_page, examples_filename,max_model_tokens,chunk_size,num_qa_per_section,json_example_filename)
+        # response = await asyncio.to_thread(
+        #     q.quiz_manager, wiki_page, max_model_tokens=5000, num_qa_per_section=2, chunk_size=1000
+        # )
         response = "hello"
 
-        #append
-        blob_client.append_block(response, offset=len(blob_client.download_blob().readall()), length=len(content_to_append))
+        #append response
+        blob_client.append_block(
+            blob_client.append_block(response, offset=len(blob_client.download_blob().readall()), length=len(response))
+        )
 
         if isinstance(response, str):
             logging.info(f"ServiceBusQueueTrigger response: {response}")
