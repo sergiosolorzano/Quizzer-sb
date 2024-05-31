@@ -3,11 +3,14 @@ import logging
 import pandas as pd
 from shared_code import manage_quiz_gen
 import requests
+import asyncio
+import json
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
 @app.route(route="http_trigger")
-def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
+#def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
+async def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
     try:
 
         logging.info('Python HTTP trigger function processed a request.')
@@ -34,8 +37,15 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
 
         q=manage_quiz_gen.Generate_Quiz()
         
-        response = q.quiz_manager(wiki_page, examples_filename,max_model_tokens,chunk_size,num_qa_per_section,json_example_filename)
-        return func.HttpResponse(response, mimetype="text/json")
+        response = await asyncio.to_thread(q.quiz_manager, wiki_page, examples_filename,max_model_tokens,chunk_size,num_qa_per_section,json_example_filename)
+        #return func.HttpResponse(response, mimetype="text/json")
+
+        if isinstance(response, str):
+            return func.HttpResponse(response, mimetype="text/json")
+        elif isinstance(response, dict):
+            return func.HttpResponse(json.dumps(response), mimetype="application/json")
+        else:
+            return func.HttpResponse("Unexpected HttpTrigger - not exception - response type", status_code=500)
     
     except Exception as e:
         logging.error(f"HttpTrigger: Error processing HTTP trigger: {e}")
@@ -44,7 +54,7 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
 
 @app.service_bus_queue_trigger(arg_name="azservicebus", queue_name="myqueue",
                                connection="SERVICEBUS_CONNECTION") 
-def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
+async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
     
     wiki_page = azservicebus.get_body().decode('utf-8')
 
