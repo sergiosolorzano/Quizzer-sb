@@ -220,7 +220,7 @@ class HelperFunctions:
     def ReadBlobData(self):
         try:
             blob_data = self.blob_client.download_blob().readall()
-            logging.info("**Data read from blob: %s", self.blob_name)
+            logging.info("**Data read from blob: %s", blob_data)
             return blob_data
         except Exception as e:
             logging.error("**Failed to read data from blob: %s", str(e))

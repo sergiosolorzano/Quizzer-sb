@@ -60,7 +60,7 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
             logging.error("Unexpected response type from quiz_manager")
     
         #ensure that your function processes each message from the Service Bus queue only once
-        await azservicebus.complete()
+        #await azservicebus.complete()
         logging.info("Completed ServiceBus Queue")
 
     except Exception as e:
