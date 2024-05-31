@@ -228,7 +228,7 @@ class HelperFunctions:
         
     def AppendDataToBlob(self, data):
         try:
-            self.blob_client.append_blob_from_bytes(data)
+            self.blob_client.upload_blob(data, overwrite=True)
             logging.info("**Data appended to blob: %s", self.blob_name)
         except Exception as e:
             logging.error("**Failed to append data to blob: %s", str(e))
