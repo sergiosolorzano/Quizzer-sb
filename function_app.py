@@ -8,13 +8,6 @@ import json
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
-@app.route(route="http_trigger")
-async def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
-
-    wiki_page = req.params.get("wiki")
-    logging.info(f"HttpTrigger: User entered Wiki: {wiki_page}")
-    print(f"HttpTrigger: Received Wiki page: {wiki_page}")
-
 @app.service_bus_queue_trigger(arg_name="azservicebus", queue_name="myqueue",
                                connection="SERVICEBUS_CONNECTION") 
 async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
