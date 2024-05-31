@@ -208,7 +208,7 @@ class HelperFunctions:
         self.container_client = self.blob_service_client.get_container_client(self.blob_container_name)
         if not self.container_client.exists():
             self.container_client.create_container()
-        logging.info("**After create container",self.blob_container_name)
+        logging.info("**After create container " + self.blob_container_name)
 
     def CreateBlobClient(self):
         # Create or get the blob client
