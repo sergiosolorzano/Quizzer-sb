@@ -104,17 +104,8 @@ class Generate_Quiz:
         wiki_page_full_content = "".join(self.wiki_page_content)
         chunked_text_list = self.split_text_into_chunks(wiki_page_full_content,chunk_size)
         for i, chunk in enumerate(chunked_text_list):
-            #print(f"Chunk {i + 1}:\n{chunk}\n")
+            ##print(f"Chunk {i + 1}:\n{chunk}\n")
             self.wiki_chunked_sections_list.append(chunk)
-
-    # def split_text_into_chunks(self,text, chunk_size=2000):        
-    #     tokens = word_tokenize(text)
-    #     #chunks is list of lists of tokens
-    #     chunks = [tokens[i:i + chunk_size] for i in range(0, len(tokens), chunk_size)]
-    #     #recreate chunked text
-    #     chunked_text_list = [' '.join(chunk) for chunk in chunks]
-        
-    #     return chunked_text_list
 
     def split_text_into_chunks(self,text, chunk_size=2000):
         tokenizer = tiktoken.get_encoding("cl100k_base")
