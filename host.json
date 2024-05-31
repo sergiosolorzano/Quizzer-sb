@@ -7,7 +7,7 @@
             "tryTimeout": "00:02:00",
             "delay": "00:00:00.80",
             "maxDelay": "00:01:00",
-            "maxRetries": 0
+            "maxRetries": 1
         },
         "prefetchCount": 0,
         "webProxy": "https://proxyserver:8080",
