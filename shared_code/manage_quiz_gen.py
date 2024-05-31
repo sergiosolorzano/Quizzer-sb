@@ -212,7 +212,16 @@ class HelperFunctions:
             self.blob_client.upload_blob("Initial Creation.")
             logging.info("**Created blob")
         else:
-            self.blob_client.upload_blob("", overwrite=True)
+            self.blob_client.upload_blob("Initial Creation", overwrite=True)
             logging.info("**Blob exists, overwriting")
 
         return self.blob_client
+    
+    def ReadBlobData(self):
+        try:
+            blob_data = self.blob_client.download_blob().readall()
+            logging.info("**Data read from blob: %s", self.blob_name)
+            return blob_data
+        except Exception as e:
+            logging.error("**Failed to read data from blob: %s", str(e))
+            return None

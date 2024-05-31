@@ -7,7 +7,7 @@
             "tryTimeout": "00:02:00",
             "delay": "00:00:00.80",
             "maxDelay": "00:01:00",
-            "maxRetries": 1
+            "maxRetries": 0
         },
         "prefetchCount": 0,
         "autoCompleteMessages": true,
