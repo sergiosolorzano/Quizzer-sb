@@ -11,6 +11,7 @@ from azure.keyvault.secrets import SecretClient
 from azure.identity import DefaultAzureCredential
 from azure.identity import DefaultAzureCredential, get_bearer_token_provider
 import tiktoken
+from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
 class Generate_Quiz:
     def __init__(self):
@@ -172,3 +173,44 @@ class Generate_Quiz:
             logging.info(f"1;31m[WARNING]\033[0mAn OpenAI error occurred:\033[0m ", str(e))
 
         return response_list
+    
+class HelperFunctions:
+    def __init__(self):
+        self.storage_connection_string=None
+        self.blob_container_name=None
+        self.blob_name=None
+        self.blob_service_client=None
+        self.container_client=None
+
+    def BlobCreationManager(self):
+        self.GetVariableValues
+        self.CreateBlobServiceClient
+        self.CreateContainerClient
+        self.CreateBlobClient
+
+        return self.blob_client
+
+    def GetVariableValues(self):
+        self.storage_connection_string=os.environ["AzureWebJobsStorage"]
+        self.blob_container_name=os.environ["BLOB_CONTAINER_NAME"]
+        self.blob_name=os.environ["BLOB_NAME"]
+
+    def CreateBlobServiceClient(self):
+        #Create blob service client
+        self.blob_service_client = BlobServiceClient.from_connection_string(self.storage_connection_string)
+
+    def CreateContainerClient(self):
+        #Create/Get blob container
+        self.container_client = self.blob_service_client.get_container_client(self.blob_container_name)
+        if not self.container_client.exists():
+            self.container_client.create_container()
+
+    def CreateBlobClient(self):
+        # Create or get the blob client
+        self.blob_client = self.container_client.get_blob_client(self.blob_name)
+        if not self.blob_client.exists():
+            self.blob_client.upload_blob("")
+            logging.info("Created blob")
+        else:
+            self.blob_client.upload_blob("", overwrite=True)
+            logging.info("Blob Exists, Delete All.")

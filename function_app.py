@@ -33,9 +33,17 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
         if wiki_page is None:
             wiki_page="Roy Lichtenstein"
 
+        #create blob
+        helpF = manage_quiz_gen.HelperFunctions()
+        blob_client = helpF.BlobCreationManager()
+
         q=manage_quiz_gen.Generate_Quiz()
         
-        response = await asyncio.to_thread(q.quiz_manager, wiki_page, examples_filename,max_model_tokens,chunk_size,num_qa_per_section,json_example_filename)
+        #response = await asyncio.to_thread(q.quiz_manager, wiki_page, examples_filename,max_model_tokens,chunk_size,num_qa_per_section,json_example_filename)
+        response = "hello"
+
+        #append
+        blob_client.append_block(response, offset=len(blob_client.download_blob().readall()), length=len(content_to_append))
 
         if isinstance(response, str):
             logging.info(f"ServiceBusQueueTrigger response: {response}")
@@ -45,5 +53,9 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
         else:
             logging.error("Unexpected response type from quiz_manager")
     
+        #ensure that your function processes each message from the Service Bus queue only once
+        await azservicebus.complete()
+        logging.info("Completed ServiceBus Queue")
+
     except Exception as e:
         logging.error(f"ServiceBusQueueTrigger: Error processing wikipage: {e}")
