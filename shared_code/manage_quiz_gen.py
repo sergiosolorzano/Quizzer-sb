@@ -181,6 +181,7 @@ class HelperFunctions:
         self.blob_name=None
         self.blob_service_client=None
         self.container_client=None
+        self.blob_client = None
 
     def BlobCreationManager(self):
         logging.info("**At top BlobCreationManager")
