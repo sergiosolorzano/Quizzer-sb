@@ -46,8 +46,14 @@ def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
     logging.info('Python ServiceBus Queue trigger processed a message: %s',
                 wiki_page)
     
-    # Make HTTP request to the HTTP trigger function
-    req = func.HttpRequest(method='GET', url='/api/http_trigger', params={'wiki': wiki_page}, headers={})
+    req = func.HttpRequest(
+        method='GET',
+        url='/api/http_trigger',
+        params={'wiki': wiki_page},
+        headers={},
+        body=None
+    )
+
     response = http_trigger(req)
 
     if response.status_code == 200:
