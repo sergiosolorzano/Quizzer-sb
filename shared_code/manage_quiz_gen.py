@@ -209,7 +209,7 @@ class HelperFunctions:
     def CreateBlobClient(self):
         self.blob_client = self.container_client.get_blob_client(self.blob_name)
         if not self.blob_client.exists():
-            self.blob_client.upload_blob("")
+            self.blob_client.upload_blob("Initial Creation.")
             logging.info("**Created blob")
         else:
             self.blob_client.upload_blob("", overwrite=True)

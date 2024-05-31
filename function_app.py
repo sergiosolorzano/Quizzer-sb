@@ -35,9 +35,9 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
 
         #create blob
         logging.info("**Before helper function")
-        helpF = manage_quiz_gen.HelperFunctions()
+        helpFunctions = manage_quiz_gen.HelperFunctions()
         logging.info("**Before blob_client creation function")
-        blob_client = helpF.BlobCreationManager()
+        blob_client = helpFunctions.BlobCreationManager()
 
         q=manage_quiz_gen.Generate_Quiz()
         
@@ -51,10 +51,12 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
             blob_client.append_block(response, offset=len(blob_client.download_blob().readall()), length=len(response))
         )
 
-        if isinstance(response, str):
-            logging.info(f"ServiceBusQueueTrigger response: {response}")
-        elif isinstance(response, dict):
-            response_text = json.dumps(response)
+        file_output=helpFunctions.ReadBlobData()
+
+        if isinstance(file_output, str):
+            logging.info(f"ServiceBusQueueTrigger response: {file_output}")
+        elif isinstance(file_output, dict):
+            response_text = json.dumps(file_output)
             logging.info(f"ServiceBusQueueTrigger response: {response_text}")
         else:
             logging.error("Unexpected response type from quiz_manager")
