@@ -56,12 +56,14 @@ def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
         url='/api/http_trigger',
         params={'wiki': wiki_page},
         headers={},
-        body=None
+        body=b''  # Ensuring the body is an empty byte string
     )
 
-    response = http_trigger(req)
-
-    if response.status_code == 200:
-        logging.info(f"HTTP trigger response: {response.json()}")
-    else:
-        logging.error(f"Failed to trigger HTTP function. Status code: {response.status_code}, Response: {response.text}")
+    try:
+        response = http_trigger(req)
+        if response and response.status_code == 200:
+            logging.info(f"HTTP trigger response: {response.get_body().decode('utf-8')}")
+        else:
+            logging.error(f"Failed to trigger HTTP function. Status code: {response.status_code if response else 'None'}, Response: {response.get_body().decode('utf-8') if response else 'None'}")
+    except Exception as e:
+        logging.error(f"ServiceBusQueueTrigger: Error triggering HTTP function: {e}")
