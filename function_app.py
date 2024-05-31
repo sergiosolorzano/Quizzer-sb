@@ -41,15 +41,14 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
                                connection="SERVICEBUS_CONNECTION") 
 def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
     
-    message_body = azservicebus.get_body().decode('utf-8')
+    wiki_page = azservicebus.get_body().decode('utf-8')
 
     logging.info('Python ServiceBus Queue trigger processed a message: %s',
-                message_body)
+                wiki_page)
     
     # Make HTTP request to the HTTP trigger function
-    http_trigger_url = "https://quiz-secd-funcapp.azurewebsites.net/api/http_trigger?code=yju7K8aMp--xKpfqpoIkk9qiaRbz_qb-8b8N3A4bwGMPAzFuhp8KIA%3D%3D"
-    headers = {'Content-Type': 'application/json'}
-    response = requests.get(http_trigger_url, params={"wiki": message_body}, headers=headers)
+    req = func.HttpRequest(method='GET', url='/api/http_trigger', params={'wiki': wiki_page}, headers={})
+    response = http_trigger(req)
 
     if response.status_code == 200:
         logging.info(f"HTTP trigger response: {response.json()}")
