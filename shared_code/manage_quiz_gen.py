@@ -241,15 +241,16 @@ class BlobManager:
 
     def CreateconcurrencyStatus(self, container_name, blob_name):
         #create blob_service_client
+        self.storage_connection_string = os.environ["AzureWebJobsStorage"]
         self.CreateBlobServiceClient()
         #create container
         container_client = self.blob_service_client.get_container_client(container_name)
         if not container_client.exists():
             container_client.create_container()
         #create blob_client
-        self.blob_client = container_client.get_blob_client(blob_name)
-        if not self.blob_client.exists():
-            self.blob_client.upload_blob("")
+        blob_client = container_client.get_blob_client(blob_name)
+        if not blob_client.exists():
+            blob_client.upload_blob("")
             logging.info("**Created concurrencyStatus.json")
         blobs = container_client.list_blobs(name_starts_with=directory_path)
 
