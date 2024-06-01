@@ -46,22 +46,26 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
         response = await q.quiz_manager(file_content, examples_filename,max_model_tokens,chunk_size,num_qa_per_section,json_example_filename)
         #response = await coroutine
         #logging.warning(response)
-        response_str = json.dumps(response)
+        # list into json
+        response_json = json.dumps(response)
         #logging.critical(response_str)
 
         #append quiz manager response
-        helpFunctions.AppendDataToBlob(response_str)
+        helpFunctions.AppendDataToBlob(response_json)
 
-        #read quiz manager output
-        file_output=helpFunctions.ReadBlobData()
+        #read quiz manager output, returns json
+        file_output_json=helpFunctions.ReadBlobData()
         logging.critical("###")
-        logging.critical(type(file_output))
-        logging.warning(file_output)
+        logging.critical(type(file_output_json))
+        logging.warning(file_output_json)
 
-        if isinstance(file_output, dict):
-            logging.info(f"**ServiceBusQueueTrigger response: {file_output}")
-        else:
-            logging.error("**Unexpected response type from quiz_manager")
+        #check it's json before printing json output
+        try:
+            #check output is json to print
+            json.loads(file_output_json)
+            logging.warning(file_output_json)
+        except json.JSONDecodeError:
+            print("file_output_json is not valid JSON.")
     
         logging.info("**Completed ServiceBus Queue")
 

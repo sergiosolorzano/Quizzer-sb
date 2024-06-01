@@ -188,9 +188,8 @@ class BlobManager:
         try:
             blob_data = self.blob_client.download_blob().readall()
             logging.info("**Data read from blob: %s", blob_data)
-            file_output = blob_data.decode('utf-8')
-            #return json.loads(file_output)
-            return file_output
+            file_output = blob_data.decode('utf-8').strip('"')
+            return json.loads(file_output)
         except Exception as e:
             logging.error("**Failed to read data from blob: %s", str(e))
             return None
@@ -198,7 +197,7 @@ class BlobManager:
     def AppendDataToBlob(self, data):
         try:
             self.blob_client.upload_blob(data, overwrite=True)
-            logging.info("**Data appended to blob: %s", self.blob_name)
+            logging.info("**Data appended to blob: %s", data)
         except Exception as e:
             logging.error("**Failed to append data to blob: %s", str(e))
 
