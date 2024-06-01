@@ -15,7 +15,7 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
     file_content = azservicebus.get_body().decode('utf-8')
 
     logging.info('Python ServiceBus Queue trigger processed a message:%s', file_content)
-    print('Python ServiceBus Queue trigger processed a message: ', file_content)
+    #print('Python ServiceBus Queue trigger processed a message: ', file_content)
     
     try:
 
@@ -62,4 +62,4 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
         logging.info("Completed ServiceBus Queue")
 
     except Exception as e:
-        logging.error(f"ServiceBusQueueTrigger: Error processing wikipage: {e}")
+        logging.error(f"ServiceBusQueueTrigger: Error processing File: {e}")
