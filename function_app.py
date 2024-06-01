@@ -31,7 +31,7 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
 
         #create blob
         logging.info("**Before helper function")
-        helpFunctions = manage_quiz_gen.HelperFunctions()
+        helpFunctions = manage_quiz_gen.BlobManager()
         #create concurrencyStatus.json
         helpFunctions.CreateconcurrencyStatus("azure-webjobs-hosts","concurrency/quiz-secd-funcapp/concurrencyStatus.json")
 
@@ -41,9 +41,7 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
         #instance quiz manager
         q=manage_quiz_gen.Generate_Quiz()
         
-        response = await asyncio.to_thread(
-            q.quiz_manager, wiki_page, examples_filename,max_model_tokens,chunk_size,num_qa_per_section,json_example_filename
-        )
+        response = await asyncio.to_thread(q.quiz_manager(wiki_page, examples_filename,max_model_tokens,chunk_size,num_qa_per_section,json_example_filename))
         #response = "**Hello There!"
 
         #append quiz manager response

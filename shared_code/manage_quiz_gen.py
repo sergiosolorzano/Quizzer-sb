@@ -180,7 +180,7 @@ class Generate_Quiz:
 
         return response_list
     
-class HelperFunctions:
+class BlobManager:
     def __init__(self):
         self.storage_connection_string = None
         self.blob_container_name = None
@@ -243,11 +243,19 @@ class HelperFunctions:
         #create blob_service_client
         self.CreateBlobServiceClient()
         #create container
-        self.container_client = self.blob_service_client.get_container_client(container_name)
-        if not self.container_client.exists():
-            self.container_client.create_container()
+        container_client = self.blob_service_client.get_container_client(container_name)
+        if not container_client.exists():
+            container_client.create_container()
         #create blob_client
-        self.blob_client = self.container_client.get_blob_client(blob_name)
+        self.blob_client = container_client.get_blob_client(blob_name)
         if not self.blob_client.exists():
             self.blob_client.upload_blob("")
             logging.info("**Created concurrencyStatus.json")
+        blobs = container_client.list_blobs(name_starts_with=directory_path)
+
+        #list blobs
+        directory_path = 'concurrency/quiz-secd-funcapp'
+        blobs = container_client.list_blobs(name_starts_with=directory_path)
+        logging.info(f"**Blobs in directory '{directory_path}':")
+        for blob in blobs:
+            logging.info(f"**Blob:    {blob.name}")
