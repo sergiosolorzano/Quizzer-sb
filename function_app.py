@@ -43,8 +43,7 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
         q=manage_quiz_gen.Generate_Quiz_From_File()
         
         #Get Q&A
-        coroutine = asyncio.to_thread(q.quiz_manager(file_content, examples_filename,max_model_tokens,chunk_size,num_qa_per_section,json_example_filename))
-        response = await coroutine
+        response = q.quiz_manager(file_content, examples_filename,max_model_tokens,chunk_size,num_qa_per_section,json_example_filename)
         logging.warning("**After response")
         logging.warning(response)
         logging.warning("**After loggign response")
