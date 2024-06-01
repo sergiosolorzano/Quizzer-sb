@@ -254,14 +254,23 @@ class BlobManager:
         #create blob_client
         logging.info("**Before blob_client")
         blob_client = container_client.get_blob_client(blob_name)
-        if not blob_client.exists():
-            blob_client.upload_blob("")
-            logging.info("**Created concurrencyStatus.json")
+        try:
+            if not blob_client.exists():
+                blob_client.upload_blob("", overwrite=True)
+                logging.info(f"**Created blob '{blob_name}' in container '{container_name}'.")
+            else:
+                logging.info(f"**Blob '{blob_name}' already exists in container '{container_name}'.")
+        except Exception as e:
+            logging.error(f"**Error checking/creating blob: {e}")
+            return
 
-        #list blobs
+        # List blobs in the specified directory
         logging.info("**Before list blobs")
         directory_path = 'concurrency/quiz-secd-funcapp'
-        blobs = container_client.list_blobs(name_starts_with=directory_path)
-        logging.info(f"**Blobs in directory '{directory_path}':")
-        for blob in blobs:
-            logging.info(f"**Blob:    {blob.name}")
+        try:
+            blobs = container_client.list_blobs(name_starts_with=directory_path)
+            logging.info(f"**Blobs in directory '{directory_path}':")
+            for blob in blobs:
+                logging.info(f"**Blob: {blob.name}")
+        except Exception as e:
+            logging.error(f"**Error listing blobs: {e}")
