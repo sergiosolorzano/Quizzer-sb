@@ -44,27 +44,16 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
         
         #Get Q&A
         response = await q.quiz_manager(file_content, examples_filename,max_model_tokens,chunk_size,num_qa_per_section,json_example_filename)
-        #response = await coroutine
-        #logging.warning(response)
 
         #append quiz manager response
         helpFunctions.AppendDataToBlob(response)
 
         #read quiz manager output, returns json
         file_output_json=helpFunctions.ReadBlobData()
-        # logging.critical("###")
-        # logging.critical(type(file_output_json))
+
         logging.warning(file_output_json)
 
-        # #check it's json before printing json output
-        # try:
-        #     #check output is json to print
-        #     json.loads(file_output_json)
-        #     logging.warning(file_output_json)
-        # except json.JSONDecodeError:
-        #     print("file_output_json is not valid JSON.")
-    
-        logging.info("**Completed ServiceBus Queue")
+        logging.warning("**Successfully Completed ServiceBus Queue")
 
     except Exception as e:
-        logging.error(f"**ServiceBusQueueTrigger: Error processing File: {e}")
+        logging.error(f"**ERROR: ServiceBusQueueTrigger: Error processing File: {e}")

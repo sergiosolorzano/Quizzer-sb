@@ -194,7 +194,7 @@ class BlobManager:
             return file_output
         except Exception as e:
             logging.error("**Failed to read data from blob: %s", str(e))
-            return None
+            return "ERROR: Failed to read data from blob"
         
     def AppendDataToBlob(self, data):
         try:
