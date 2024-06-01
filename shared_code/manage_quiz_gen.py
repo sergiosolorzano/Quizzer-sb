@@ -23,7 +23,7 @@ class Generate_Quiz_From_File:
         self.quiz_examples = None
         self.questions_to_date = []
         
-    def quiz_manager(self, file_content, quiz_examples_filename='examples_qa.txt',max_model_tokens=4000, chunk_size=2000,num_qa_per_section=2,json_example_filename="json_example_fn.txt"):
+    async def quiz_manager(self, file_content, quiz_examples_filename='examples_qa.txt',max_model_tokens=4000, chunk_size=2000,num_qa_per_section=2,json_example_filename="json_example_fn.txt"):
         
         self.assign_vars(file_content,json_example_filename,quiz_examples_filename)
         self.generate_chunks(chunk_size)
