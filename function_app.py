@@ -46,22 +46,22 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
         coroutine = asyncio.to_thread(q.quiz_manager(file_content, examples_filename,max_model_tokens,chunk_size,num_qa_per_section,json_example_filename))
         response = await coroutine
         logging.warning(response)
-        response_str = json.dumps(response)
-        logging.critical(response_str)
+        # response_str = json.dumps(response)
+        # logging.critical(response_str)
 
-        #append quiz manager response
-        helpFunctions.AppendDataToBlob(response_str)
+        # #append quiz manager response
+        # helpFunctions.AppendDataToBlob(response_str)
 
-        #read quiz manager output
-        file_output=helpFunctions.ReadBlobData()
-        logging.critical(file_output)
+        # #read quiz manager output
+        # file_output=helpFunctions.ReadBlobData()
+        # logging.critical(file_output)
 
-        if isinstance(file_output, dict):
-            logging.info(f"**ServiceBusQueueTrigger response: {file_output}")
-        else:
-            logging.error("**Unexpected response type from quiz_manager")
+        # if isinstance(file_output, dict):
+        #     logging.info(f"**ServiceBusQueueTrigger response: {file_output}")
+        # else:
+        #     logging.error("**Unexpected response type from quiz_manager")
     
-        logging.info("**Completed ServiceBus Queue")
+        # logging.info("**Completed ServiceBus Queue")
 
     except Exception as e:
         logging.error(f"**ServiceBusQueueTrigger: Error processing File: {e}")
