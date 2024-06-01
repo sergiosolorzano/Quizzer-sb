@@ -41,10 +41,10 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
 
         q=manage_quiz_gen.Generate_Quiz()
         
-        # response = await asyncio.to_thread(
-        #     q.quiz_manager, wiki_page, max_model_tokens=5000, num_qa_per_section=2, chunk_size=1000
-        # )
-        response = "**Hello There!"
+        response = await asyncio.to_thread(
+            q.quiz_manager, wiki_page, max_model_tokens=5000, num_qa_per_section=2, chunk_size=1000
+        )
+        #response = "**Hello There!"
 
         #append response
         helpFunctions.AppendDataToBlob(response)
