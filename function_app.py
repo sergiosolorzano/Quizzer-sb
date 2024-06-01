@@ -53,6 +53,8 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
 
         if isinstance(file_output, str):
             logging.info(f"ServiceBusQueueTrigger response: {file_output}")
+        elif isinstance(file_output, bytes):
+            logging.info(f"ServiceBusQueueTrigger response: {file_output}")
         elif isinstance(file_output, dict):
             response_text = json.dumps(file_output)
             logging.info(f"ServiceBusQueueTrigger response: {response_text}")
