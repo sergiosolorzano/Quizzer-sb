@@ -127,7 +127,7 @@ class Generate_Quiz_From_File:
                 question = data["quiz"][i]["question"]
                 answer = data["quiz"][i]["answer"]
                 #print(f"\n\n\n***ROUND {i}: TEXT: {chunk_text} \nQUESTION: {question} \nANSWER {answer}")
-                logging.info(f"\n\n\n***ROUND {i}: TEXT: {chunk_text} \nQUESTION: {question} \nANSWER {answer}")
+                logging.info(f"\n\n\n***ROUND {i}: TEXT: {chunk_text} \n\nQUESTION: {question} \n\nANSWER {answer}")
                 i += 1
                 if question is None and question in self.questions_to_date:
                     continue
@@ -161,17 +161,17 @@ class BlobManager:
         self.storage_connection_string = os.environ["AzureWebJobsStorage"]
         self.blob_container_name = os.environ["BLOB_CONTAINER_NAME"]
         self.blob_name = os.environ["BLOB_NAME"]
-        logging.info("**After creating all variables")
+        #logging.info("**After creating all variables")
 
     def CreateBlobServiceClient(self):
         self.blob_service_client = BlobServiceClient.from_connection_string(self.storage_connection_string)
-        logging.info("**After creating blob service client")
+        #logging.info("**After creating blob service client")
 
     def CreateContainerClient(self):
         self.container_client = self.blob_service_client.get_container_client(self.blob_container_name)
         if not self.container_client.exists():
             self.container_client.create_container()
-        logging.info("**After creating container %s", self.blob_container_name)
+        #logging.info("**After creating container %s", self.blob_container_name)
 
     def CreateBlobClient(self):
         self.blob_client = self.container_client.get_blob_client(self.blob_name)
@@ -187,7 +187,7 @@ class BlobManager:
     def ReadBlobData(self):
         try:
             blob_data = self.blob_client.download_blob().readall()
-            logging.info("**Data read from blob: %s", blob_data)
+            #logging.info("**Data read from blob: %s", blob_data)
             file_output = blob_data.decode('utf-8')
             #file_output = blob_data.decode('utf-8').strip('"')
             #return json.loads(file_output)
