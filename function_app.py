@@ -42,25 +42,23 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
         #instance quiz manager
         q=manage_quiz_gen.Generate_Quiz_From_File()
         
+        #Get Q&A
         response = await asyncio.to_thread(q.quiz_manager(file_content, examples_filename,max_model_tokens,chunk_size,num_qa_per_section,json_example_filename))
         response=json.dumps(response)
+
         #append quiz manager response
         helpFunctions.AppendDataToBlob(response)
 
         #read quiz manager output
         file_output=helpFunctions.ReadBlobData()
+        logging.critical(file_output)
 
-        if isinstance(file_output, str):
-            logging.info(f"ServiceBusQueueTrigger response: {file_output}")
-        elif isinstance(file_output, bytes):
-            logging.info(f"ServiceBusQueueTrigger response: {file_output}")
-        elif isinstance(file_output, dict):
-            response_text = json.dumps(file_output)
-            logging.info(f"ServiceBusQueueTrigger response: {response_text}")
+        if isinstance(file_output, dict):
+            logging.info(f"**ServiceBusQueueTrigger response: {file_output}")
         else:
-            logging.error("Unexpected response type from quiz_manager")
+            logging.error("**Unexpected response type from quiz_manager")
     
-        logging.info("Completed ServiceBus Queue")
+        logging.info("**Completed ServiceBus Queue")
 
     except Exception as e:
-        logging.error(f"ServiceBusQueueTrigger: Error processing File: {e}")
+        logging.error(f"**ServiceBusQueueTrigger: Error processing File: {e}")
