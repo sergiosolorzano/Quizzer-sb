@@ -47,8 +47,17 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
         #response = await coroutine
         logging.warning(response)
         # list into json
-        response_json = json.dumps(response)
-        logging.critical(response_json)
+        pairs = response.split('\n\n')
+
+        # Organize pairs into a list of dictionaries
+        result = []
+        for pair in pairs:
+            question, answer = pair.split('\n', 1)
+            result.append({"Question": question, "Answer": answer})
+
+        # Convert to JSON
+        json_data = json.dumps(result)
+        logging.critical(json_data)
 
         #append quiz manager response
         # helpFunctions.AppendDataToBlob(response_json)
