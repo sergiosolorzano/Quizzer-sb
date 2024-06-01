@@ -2,9 +2,10 @@ import azure.functions as func
 import logging
 import pandas as pd
 from shared_code import manage_quiz_gen
-import requests
 import asyncio
 import json
+
+logging.basicConfig(level=logging.DEBUG)
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 

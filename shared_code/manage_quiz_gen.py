@@ -130,7 +130,6 @@ class Generate_Quiz_From_File:
                 logging.info(f"\n\n\n***ROUND {i}: TEXT: {chunk_text} \nQUESTION: {question} \nANSWER {answer}")
                 i += 1
                 if question is None and question in self.questions_to_date:
-
                     continue
                 else:
                     response_list.append([f"Question: " + question, f"Answer: " + answer])
