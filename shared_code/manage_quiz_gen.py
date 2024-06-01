@@ -260,7 +260,6 @@ class BlobManager:
 
         #list blobs
         logging.info("**Before list blobs")
-        blobs = container_client.list_blobs(name_starts_with=directory_path)
         directory_path = 'concurrency/quiz-secd-funcapp'
         blobs = container_client.list_blobs(name_starts_with=directory_path)
         logging.info(f"**Blobs in directory '{directory_path}':")
