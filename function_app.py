@@ -54,7 +54,8 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
 
         #read quiz manager output
         file_output=helpFunctions.ReadBlobData()
-        logging.critical(file_output)
+        logging.critical("###")
+        logging.critical(type(file_output))
 
         if isinstance(file_output, dict):
             logging.info(f"**ServiceBusQueueTrigger response: {file_output}")
