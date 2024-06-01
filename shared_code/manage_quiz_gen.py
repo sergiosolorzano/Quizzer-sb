@@ -189,7 +189,8 @@ class BlobManager:
             blob_data = self.blob_client.download_blob().readall()
             logging.info("**Data read from blob: %s", blob_data)
             file_output = blob_data.decode('utf-8')
-            return json.loads(file_output)
+            #return json.loads(file_output)
+            return file_output
         except Exception as e:
             logging.error("**Failed to read data from blob: %s", str(e))
             return None
