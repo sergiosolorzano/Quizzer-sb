@@ -123,19 +123,20 @@ class Generate_Quiz:
         this_conversation = []
         response_list=[]
 
+        model = "gpt-35-turbo"
+        if(self.questions_to_date is not None):
+            system_message = {"role": "system", "content": f"You generate Questions with the corresponding Answers SPECIFIC TO a text excerpt given to you in this query. YOU DO NOT generate these questions {self.questions_to_date}. You keep both Questions and Answers short. Your response is in JSON format following this format:{self.json_example}."}
+            #append examples , request and json format example, exclude questions to date
+            request_to_gpt=f"Give me {num_questions} questions with its corresponding answer, BUT NOT for these questions {self.questions_to_date}, relevant specifically for this text: {chunk_text}. Use this as an example if a text excerpt given BUT DO NOT INCLUDE THESE EXAMPLE QUESTIONS in your response because they are an example: {self.quiz_examples}.  Respond only with the Questions and the Answers SPECIFIC to the text excerpt given to you."
+        else:
+            system_message = {"role": "system", "content": f"You generate Questions with the corresponding Answers SPECIFIC TO a text excerpt given to you in this query. You keep both of these short. Your response is in JSON format following this format:{self.json_example}."}
+            request_to_gpt=f"Give me {num_questions} questions with its corresponding answer SPECIFIC TO THIS text excerpt: {chunk_text}. Use this as an example if a text excerpt given BUT DO NOT INCLUDE THESE EXAMPLE QUESTIONS in your response because they are an example: {self.quiz_examples}. Respond only with the Questions and the Answers SPECIFIC to the text excerpt given to you."
+        
+        this_conversation.append(system_message)
+        this_conversation.append({"role": "user", "content": request_to_gpt})
+
         try:
-            model = "gpt-35-turbo"
-            if(self.questions_to_date is not None):
-                system_message = {"role": "system", "content": f"You generate Questions with the corresponding Answers SPECIFIC TO a text excerpt given to you in this query. YOU DO NOT generate these questions {self.questions_to_date}. You keep both Questions and Answers short. Your response is in JSON format following this format:{self.json_example}."}
-                #append examples , request and json format example, exclude questions to date
-                request_to_gpt=f"Give me {num_questions} questions with its corresponding answer, BUT NOT for these questions {self.questions_to_date}, relevant specifically for this text: {chunk_text}. Use this as an example if a text excerpt given BUT DO NOT INCLUDE THESE EXAMPLE QUESTIONS in your response because they are an example: {self.quiz_examples}.  Respond only with the Questions and the Answers SPECIFIC to the text excerpt given to you."
-            else:
-                system_message = {"role": "system", "content": f"You generate Questions with the corresponding Answers SPECIFIC TO a text excerpt given to you in this query. You keep both of these short. Your response is in JSON format following this format:{self.json_example}."}
-                request_to_gpt=f"Give me {num_questions} questions with its corresponding answer SPECIFIC TO THIS text excerpt: {chunk_text}. Use this as an example if a text excerpt given BUT DO NOT INCLUDE THESE EXAMPLE QUESTIONS in your response because they are an example: {self.quiz_examples}. Respond only with the Questions and the Answers SPECIFIC to the text excerpt given to you."
-            
-            this_conversation.append(system_message)
-            this_conversation.append({"role": "user", "content": request_to_gpt})
-            
+
             client = AzureOpenAI(
                 api_key = self.openai_k,  
                 api_version = "2023-09-15-preview", #"2024-02-01"
@@ -149,7 +150,12 @@ class Generate_Quiz:
                 max_tokens=max_model_tokens,
                 response_format={ "type": "json_object" }
             )
+        
+        except Exception as e:
+            print(f"1;31m[WARNING]\033[0mAn OpenAI error occurred:\033[0m ", str(e))
+            logging.info(f"1;31m[WARNING]\033[0mAn OpenAI error occurred:\033[0m ", str(e))
 
+        try:
             i = 0
             message_content = response.choices[0].message.content# ['choices'][0]['message']['content']
             data = json.loads(message_content)
@@ -169,8 +175,8 @@ class Generate_Quiz:
                     self.questions_to_date.append(question)
            
         except Exception as e:
-            print(f"1;31m[WARNING]\033[0mAn OpenAI error occurred:\033[0m ", str(e))
-            logging.info(f"1;31m[WARNING]\033[0mAn OpenAI error occurred:\033[0m ", str(e))
+            print(f"Error Iterating over OpenAI response", str(e))
+            logging.info(f"Error Iterating over OpenAI response ", str(e))
 
         return response_list
     
@@ -232,3 +238,16 @@ class HelperFunctions:
             logging.info("**Data appended to blob: %s", self.blob_name)
         except Exception as e:
             logging.error("**Failed to append data to blob: %s", str(e))
+
+    def CreateconcurrencyStatus(self, container_name, blob_name):
+        #create blob_service_client
+        self.CreateBlobServiceClient()
+        #create container
+        self.container_client = self.blob_service_client.get_container_client(container_name)
+        if not self.container_client.exists():
+            self.container_client.create_container()
+        #create blob_client
+        self.blob_client = self.container_client.get_blob_client(blob_name)
+        if not self.blob_client.exists():
+            self.blob_client.upload_blob("")
+            logging.info("**Created concurrencyStatus.json")

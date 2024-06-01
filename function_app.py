@@ -19,10 +19,6 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
     
     try:
 
-        max_model_tokens=5000
-        num_qa_per_section=2
-        chunk_size=1000
-
         examples_filename = 'examples_qa.txt'
         json_example_filename = 'json_example_fn.txt'
 
@@ -36,19 +32,24 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
         #create blob
         logging.info("**Before helper function")
         helpFunctions = manage_quiz_gen.HelperFunctions()
-        logging.info("**Before blob_client creation function")
-        blob_client = helpFunctions.BlobCreationManager()
+        #create concurrencyStatus.json
+        helpFunctions.CreateconcurrencyStatus("azure-webjobs-hosts","concurrency/quiz-secd-funcapp/concurrencyStatus.json")
 
+        logging.info("**Before manager create output file")
+        helpFunctions.BlobCreationManager()
+
+        #instance quiz manager
         q=manage_quiz_gen.Generate_Quiz()
         
         response = await asyncio.to_thread(
-            q.quiz_manager, wiki_page, max_model_tokens=5000, num_qa_per_section=2, chunk_size=1000
+            q.quiz_manager, wiki_page, examples_filename,max_model_tokens,chunk_size,num_qa_per_section,json_example_filename
         )
         #response = "**Hello There!"
 
-        #append response
+        #append quiz manager response
         helpFunctions.AppendDataToBlob(response)
 
+        #read quiz manager output
         file_output=helpFunctions.ReadBlobData()
 
         if isinstance(file_output, str):
@@ -61,8 +62,6 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
         else:
             logging.error("Unexpected response type from quiz_manager")
     
-        #ensure that your function processes each message from the Service Bus queue only once
-        #await azservicebus.complete()
         logging.info("Completed ServiceBus Queue")
 
     except Exception as e:
