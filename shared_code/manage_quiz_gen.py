@@ -59,7 +59,7 @@ class Generate_Quiz_From_File:
         with open(json_example_filename, 'r') as file:
                 self.json_example = file.read()
 
-        self.openai_k="d06f21924c954d0ab63168244ddfde60"
+        self.openai_k=os.environ["OPENAIKEY"]
        
         with open(quiz_examples_filename, 'r') as file:
                 self.quiz_examples = file.read()
@@ -100,7 +100,7 @@ class Generate_Quiz_From_File:
         try:
 
             client = AzureOpenAI(
-                api_key = self.openai_k,  
+                api_key = self.openai_k,
                 api_version = "2023-09-15-preview", #"2024-02-01"
                 azure_endpoint = os.environ["OPENAIENDPOINT"]
                 )
