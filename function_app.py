@@ -45,11 +45,11 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
         #Get Q&A
         response = await asyncio.to_thread(q.quiz_manager(file_content, examples_filename,max_model_tokens,chunk_size,num_qa_per_section,json_example_filename))
         logging.warning(response)
-        response = json.dumps(response)
-        logging.critical(response)
+        response_str = json.dumps(response)
+        logging.critical(response_str)
 
         #append quiz manager response
-        helpFunctions.AppendDataToBlob(response)
+        helpFunctions.AppendDataToBlob(response_str)
 
         #read quiz manager output
         file_output=helpFunctions.ReadBlobData()
