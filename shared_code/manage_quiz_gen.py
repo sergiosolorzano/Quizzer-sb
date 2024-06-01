@@ -241,20 +241,26 @@ class BlobManager:
 
     def CreateconcurrencyStatus(self, container_name, blob_name):
         #create blob_service_client
+        logging.info("**Top CreateconcurrencyStatus")
         self.storage_connection_string = os.environ["AzureWebJobsStorage"]
+        logging.info("**After self.storage_connection_string")
         self.CreateBlobServiceClient()
+        logging.info("**After self.CreateBlobServiceClient")
         #create container
+        logging.info("**Before container_client")
         container_client = self.blob_service_client.get_container_client(container_name)
         if not container_client.exists():
             container_client.create_container()
         #create blob_client
+        logging.info("**Before blob_client")
         blob_client = container_client.get_blob_client(blob_name)
         if not blob_client.exists():
             blob_client.upload_blob("")
             logging.info("**Created concurrencyStatus.json")
-        blobs = container_client.list_blobs(name_starts_with=directory_path)
 
         #list blobs
+        logging.info("**Before list blobs")
+        blobs = container_client.list_blobs(name_starts_with=directory_path)
         directory_path = 'concurrency/quiz-secd-funcapp'
         blobs = container_client.list_blobs(name_starts_with=directory_path)
         logging.info(f"**Blobs in directory '{directory_path}':")
