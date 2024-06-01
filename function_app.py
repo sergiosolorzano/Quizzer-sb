@@ -12,10 +12,10 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
                                connection="SERVICEBUS_CONNECTION") 
 async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
     
-    wiki_page = azservicebus.get_body().decode('utf-8')
+    file_content = azservicebus.get_body().decode('utf-8')
 
-    logging.info('Python ServiceBus Queue trigger processed a message:%s', wiki_page)
-    print('Python ServiceBus Queue trigger processed a message: ', wiki_page)
+    logging.info('Python ServiceBus Queue trigger processed a message:%s', file_content)
+    print('Python ServiceBus Queue trigger processed a message: ', file_content)
     
     try:
 
@@ -26,23 +26,22 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
         num_qa_per_section=2
         chunk_size=1000
 
-        if wiki_page is None:
-            wiki_page="Roy Lichtenstein"
+        if file_content is None:
+            logging.error("No File provided or File is empty")
 
         #create blob
-        logging.info("**Before helper function")
         helpFunctions = manage_quiz_gen.BlobManager()
+        
         #create concurrencyStatus.json
-        helpFunctions.CreateconcurrencyStatus("azure-webjobs-hosts","concurrency/quiz-secd-funcapp/concurrencyStatus.json")
+        #helpFunctions.CreateconcurrencyStatus("azure-webjobs-hosts","concurrency/quiz-secd-funcapp/concurrencyStatus.json")
 
-        logging.info("**Before manager create output file")
+        #create output file
         helpFunctions.BlobCreationManager()
 
         #instance quiz manager
-        q=manage_quiz_gen.Generate_Quiz()
+        q=manage_quiz_gen.Generate_Quiz_From_File()
         
-        response = await asyncio.to_thread(q.quiz_manager(wiki_page, examples_filename,max_model_tokens,chunk_size,num_qa_per_section,json_example_filename))
-        #response = "**Hello There!"
+        response = await asyncio.to_thread(q.quiz_manager(file_content, examples_filename,max_model_tokens,chunk_size,num_qa_per_section,json_example_filename))
 
         #append quiz manager response
         helpFunctions.AppendDataToBlob(response)
