@@ -46,35 +46,23 @@ async def ServiceBusQueueTrigger(azservicebus: func.ServiceBusMessage):
         response = await q.quiz_manager(file_content, examples_filename,max_model_tokens,chunk_size,num_qa_per_section,json_example_filename)
         #response = await coroutine
         logging.warning(response)
-        # list into json
-        pairs = response.split('\n\n')
-
-        # Organize pairs into a list of dictionaries
-        result = []
-        for pair in pairs:
-            question, answer = pair.split('\n', 1)
-            result.append({"Question": question, "Answer": answer})
-
-        # Convert to JSON
-        json_data = json.dumps(result)
-        logging.critical(json_data)
 
         #append quiz manager response
-        # helpFunctions.AppendDataToBlob(response_json)
+        helpFunctions.AppendDataToBlob(response)
 
-        # #read quiz manager output, returns json
-        # file_output_json=helpFunctions.ReadBlobData()
-        # logging.critical("###")
-        # logging.critical(type(file_output_json))
-        # logging.warning(file_output_json)
+        #read quiz manager output, returns json
+        file_output_json=helpFunctions.ReadBlobData()
+        logging.critical("###")
+        logging.critical(type(file_output_json))
+        logging.warning(file_output_json)
 
-        # #check it's json before printing json output
-        # try:
-        #     #check output is json to print
-        #     json.loads(file_output_json)
-        #     logging.warning(file_output_json)
-        # except json.JSONDecodeError:
-        #     print("file_output_json is not valid JSON.")
+        #check it's json before printing json output
+        try:
+            #check output is json to print
+            json.loads(file_output_json)
+            logging.warning(file_output_json)
+        except json.JSONDecodeError:
+            print("file_output_json is not valid JSON.")
     
         logging.info("**Completed ServiceBus Queue")
 
