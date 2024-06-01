@@ -1,12 +1,12 @@
 {
   "quiz": [
     {
-      "question": "What is pop art?",
-      "answer": "Pop art is an art movement that emerged in the 1950s and 1960s in Britain and the United States, characterized by themes and techniques drawn from popular mass culture such as advertising and comic books."
+      "question": "This would be a question",
+      "answer": "This would be the answer for the question"
     },
     {
-      "question": "Who were some leading figures in the pop art movement during the 1960s?",
-      "answer": "Along with Andy Warhol, Jasper Johns, and James Rosenquist, Roy Fox Lichtenstein became a leading figure in the new art movement during the 1960s."
+      "question": "This would be a different question",
+      "answer": "This would be the corresponding answer to the question"
     }
   ]
 }

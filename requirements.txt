@@ -6,7 +6,6 @@ azure-functions
 azure-identity
 azure-keyvault
 azure-storage-blob
-Wikipedia-API
 unstructured
 pandas
 openai

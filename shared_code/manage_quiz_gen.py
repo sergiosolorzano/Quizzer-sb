@@ -140,6 +140,7 @@ class Generate_Quiz_From_File:
             #print(f"Error Iterating over OpenAI response", str(e))
             logging.info(f"Error Iterating over OpenAI response ", str(e))
 
+        logging.warning(response_list)
         return response_list
 
 class BlobManager:
