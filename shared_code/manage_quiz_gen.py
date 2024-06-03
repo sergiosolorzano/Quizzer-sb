@@ -161,11 +161,11 @@ class BlobManager:
         self.storage_connection_string = os.environ["AzureWebJobsStorage"]
         self.blob_container_name = os.environ["BLOB_CONTAINER_NAME"]
         self.blob_name = os.environ["BLOB_NAME"]
-        #logging.info("**After creating all variables")
+        ##logging.info("**After creating all variables")
 
     def CreateBlobServiceClient(self):
         self.blob_service_client = BlobServiceClient.from_connection_string(self.storage_connection_string)
-        #logging.info("**After creating blob service client")
+        ##logging.info("**After creating blob service client")
 
     def CreateContainerClient(self):
         self.container_client = self.blob_service_client.get_container_client(self.blob_container_name)
