@@ -171,7 +171,7 @@ class BlobManager:
         self.container_client = self.blob_service_client.get_container_client(self.blob_container_name)
         if not self.container_client.exists():
             self.container_client.create_container()
-        #logging.info("**After creating container %s", self.blob_container_name)
+        ##logging.info("**After creating container %s", self.blob_container_name)
 
     def CreateBlobClient(self):
         self.blob_client = self.container_client.get_blob_client(self.blob_name)
